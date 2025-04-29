@@ -1,16 +1,14 @@
-// public/app.js
 const form = document.getElementById('messageForm');
 const messagesList = document.getElementById('messagesList');
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const username = document.getElementById('username').value;
-  const text = document.getElementById('text').value;
+
+  const formData = new FormData(form);
 
   const res = await fetch('/api/messages', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, text })
+    body: formData
   });
 
   const newMessage = await res.json();
@@ -27,8 +25,24 @@ async function loadMessages() {
 
 function addMessageToList(message) {
   const li = document.createElement('li');
-  li.textContent = `${message.username}: ${message.text}`;
+  li.className = 'message';
+  li.setAttribute('data-id', message.id);
+  li.innerHTML = `
+    <strong>${message.username}</strong>: ${message.text} 
+    <div class="timestamp">${message.timestamp}</div>
+    ${message.image ? `<img src="${message.image}" alt="uploaded image" />` : ''}
+    <button class="delete-btn" onclick="deleteMessage(${message.id})">Delete</button>
+  `;
   messagesList.appendChild(li);
+}
+
+async function deleteMessage(id) {
+  const res = await fetch(`/api/messages/${id}`, {
+    method: 'DELETE'
+  });
+  if (res.ok) {
+    document.querySelector(`li[data-id='${id}']`)?.remove();
+  }
 }
 
 loadMessages();
