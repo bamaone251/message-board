@@ -19,7 +19,7 @@ env:
 jobs:
 # Please do not rename this job
   build-project:
-    name: build message-board
+    name: build message-board111
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -59,5 +59,5 @@ jobs:
           branch-id: ${{ inputs.branch-id }}
           version: ${{ github.sha }}
           folder: ${{ env.DEPLOYMENT_FOLDER }}
-          config-file: .deploy-now/message-board/config.yaml
+          config-file: .deploy-now/message-board111/config.yaml
           action: upload
